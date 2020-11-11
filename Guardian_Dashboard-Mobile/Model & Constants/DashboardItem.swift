@@ -13,8 +13,8 @@ protocol ActivationState {
 }
 
 //For WiFi and LTE
-enum SignalStrength: ActivationState {
-    case noSignal
+enum SignalStrength: Int, ActivationState {
+    case noSignal = 0
     case weak
     case medium
     case strong
@@ -22,24 +22,24 @@ enum SignalStrength: ActivationState {
     var isActive: Bool { return self != .noSignal }
 }
 
-enum BTLEConnectionStrength: ActivationState {
-    case turnedOff
+enum BTLEConnectionStrength: Int, ActivationState {
+    case turnedOff = 0
     case weak
     case proximate
     
     var isActive: Bool { return self != .turnedOff }
 }
 
-enum BTClassicPairedStatus {
+enum BTClassicPairedStatus: Int {
+    case notPaired = 0
     case paired
-    case notPaired
     
     var isActive: Bool { return self != .notPaired }
 }
 
 //For NFC, hardware encryption, VPN usage, location tracking, antivirus, MDM usage
-enum TurnedOnStatus: ActivationState {
-    case off
+enum TurnedOnStatus: Int, ActivationState {
+    case off = 0
     case on
     
     var isActive: Bool { return self != .off }
@@ -56,11 +56,27 @@ enum DashboardItemType {
     case gps(status: TurnedOnStatus)
     case antivirusStatus(status: TurnedOnStatus)
     case mdmStatus(status: TurnedOnStatus)
+    
+    //TODO: use this for DashboardItem.image
+    var strength: Float {
+        switch self {
+        case .lte(let signalStrength): return Float(signalStrength.rawValue) / Float(4.0)
+        case .btle(let connectionStrength): return Float(connectionStrength.rawValue) / Float(3.0)
+        case .btClassic(let pairedStatus): return Float(pairedStatus.rawValue)
+        case .nfc(let status): return Float(status.rawValue)
+        case .encryptionStatus(let status): return Float(status.rawValue)
+        case .vpn(let status): return Float(status.rawValue)
+        case .wifi(let signalStrength): return Float(signalStrength.rawValue) / Float(4.0)
+        case .gps(let status): return Float(status.rawValue)
+        case .antivirusStatus(let status): return Float(status.rawValue)
+        case .mdmStatus(let status): return Float(status.rawValue)
+        }
+    }
 }
 
 
 struct DashboardItem {
-    static let defaultItems: [DashboardItem] = [DashboardItem(type: .lte(signalStrength: .strong)), DashboardItem(type: .btle(connectionStrength: .proximate)), /*DashboardItem(type: .btClassic(pairedStatus: .notPaired)),*/ DashboardItem(type: .nfc(status: .on)), DashboardItem(type: .encryptionStatus(status: .off)), DashboardItem(type: .vpn(status: .off)), DashboardItem(type: .wifi(signalStrength: .medium)), DashboardItem(type: .gps(status: .on)), DashboardItem(type: .antivirusStatus(status: .off)), DashboardItem(type: .mdmStatus(status: .off))]
+    static let defaultItems: [DashboardItem] = [DashboardItem(type: .lte(signalStrength: .strong)), DashboardItem(type: .wifi(signalStrength: .medium)), DashboardItem(type: .btle(connectionStrength: .proximate)), /*DashboardItem(type: .btClassic(pairedStatus: .notPaired)),*/ DashboardItem(type: .nfc(status: .on)), DashboardItem(type: .encryptionStatus(status: .off)), DashboardItem(type: .vpn(status: .off)), DashboardItem(type: .gps(status: .on)), DashboardItem(type: .antivirusStatus(status: .off)), DashboardItem(type: .mdmStatus(status: .off))]
     
     let type: DashboardItemType
     var image: UIImage? {
@@ -78,7 +94,7 @@ struct DashboardItem {
             case .turnedOff: return UIImage(named: ImageFileNames.bluetoothRed)
             case .weak: return UIImage(named: ImageFileNames.bluetoothYellow)
             }
-        case .btClassic(let pairedStatus): return UIImage(named: ImageFileNames.bluetoothRed)
+        case .btClassic( _): return UIImage(named: ImageFileNames.bluetoothRed)
         case .nfc(let status):
             switch status {
             case .off: return UIImage(named: ImageFileNames.nfcRed)

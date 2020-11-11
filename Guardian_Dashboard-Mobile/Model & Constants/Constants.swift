@@ -9,7 +9,9 @@
 import Foundation
 
 struct StoryboardStrings {
+    static let mainStoryboardName = "Main"
     static let dashboardVCStoryboardID = "dashboardVC"
+    static let menuStoryboardID = "menuVC"
     static let dashboardItemRestoreID = "dashboardItemCell"
     static let btUsersCellID = "btUsersCell"
     static let nfcTransmissionCellID = "nfcTransmission"
@@ -17,11 +19,13 @@ struct StoryboardStrings {
     static let vpnRecentConnectionsCellID = "recentVpnConnections"
     static let wifiConnectionsCellID = "wifiConnections"
     static let wifiRecentConnectionsCellID = "wifiRecentConnections"
+    static let menuCellID = "menuCell"
     static let btUsersVCID = "btUsersVC"
     static let nfcTransmissionsVCID = "nfcTransmissionsVC"
     static let vpnConnectionsVCID = "vpnConnectionsVC"
     static let wifiConnectionsVCID = "wifiConnectionsVC"
     static let segueToBtUsersVCID = "segueToBTUsers"
+    static let overallConnectionStatus = "Overall Connection Status: "
 }
 
 struct ImageFileNames {
@@ -74,6 +78,8 @@ struct ImageFileNames {
     static let wifiBlack = "icons8-wi-fi-black"
     
     static let notActive = "no-stopping"
+    
+    static let hamburgerMenu = "icons8-menu"
 }
 
 
